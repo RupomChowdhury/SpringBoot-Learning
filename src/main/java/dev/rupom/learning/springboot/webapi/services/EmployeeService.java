@@ -23,6 +23,7 @@ public class EmployeeService {
         EmployeeEntity employeeEntity = employeeRepository.findById(employeeId).orElse(null);
         return mapper.toEmployeeDTO(employeeEntity);
     }
+
     public List<EmployeeDTO> getAllEmployees(){
         List<EmployeeEntity> employeeEntities = employeeRepository.findAll();
         return employeeEntities
@@ -30,8 +31,25 @@ public class EmployeeService {
                 .map(mapper::toEmployeeDTO)
                 .collect(Collectors.toList());
     }
+
     public EmployeeDTO createEmployee(EmployeeDTO inputEmployee){
         EmployeeEntity employeeEntity = employeeRepository.save(mapper.toEmployeeEntity(inputEmployee));
         return mapper.toEmployeeDTO(employeeEntity);
+    }
+
+    public EmployeeDTO updateEmployeeById(Long id, EmployeeDTO updateEmployee){ //has some problem in this logic. not saving if id isn't present.
+        EmployeeEntity employeeEntity = mapper.toEmployeeEntity(updateEmployee);
+        employeeEntity.setId(id);
+        employeeEntity = employeeRepository.save(employeeEntity);
+        return mapper.toEmployeeDTO(employeeEntity);
+    }
+
+    public Boolean deleteEmployeeById(Long id){
+        boolean exists = employeeRepository.existsById(id);
+        if(exists){
+            employeeRepository.deleteById(id);
+            return true;
+        }
+        return false;
     }
 }
