@@ -1,4 +1,4 @@
-# IntroductionProject
+# SpringBootApp
 
 This repository contains my learning codes and experiments with Spring & Spring Boot framework.
 
@@ -16,7 +16,7 @@ This project is a playground for exploring Spring & Spring Boot features, includ
 - ModelMapper & MapStruct
 - Stream API
 - Lambda
-- ReflectionUtils
+- ReflectionUtils, ResponseEntity<>, Optional<>
 
 ## Getting Started
 
@@ -30,4 +30,4 @@ This project is a playground for exploring Spring & Spring Boot features, includ
 3. Run the application using the SpringBoot@MainClass as this repository contains multiple mini application.
 
 ---
-*Updated on: 09-Jan-2026 → 09:15PM*
+*Updated on: 09-Jan-2026 → 10:30PM*

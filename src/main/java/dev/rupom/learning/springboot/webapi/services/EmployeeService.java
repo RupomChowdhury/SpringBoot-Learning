@@ -10,7 +10,7 @@ import org.springframework.util.ReflectionUtils;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Service
 public class EmployeeService {
@@ -22,9 +22,9 @@ public class EmployeeService {
         this.mapper = mapper;
     }
 
-    public EmployeeDTO getEmployeeById(Long employeeId){
-        EmployeeEntity employeeEntity = employeeRepository.findById(employeeId).orElse(null);
-        return mapper.toEmployeeDTO(employeeEntity);
+    public Optional<EmployeeDTO> getEmployeeById(Long employeeId){
+//       Optional<EmployeeEntity> employeeEntity = employeeRepository.findById(employeeId);
+        return employeeRepository.findById(employeeId).map(mapper::toEmployeeDTO);
     }
 
     public List<EmployeeDTO> getAllEmployees(){
@@ -32,7 +32,7 @@ public class EmployeeService {
         return employeeEntities
                 .stream()
                 .map(mapper::toEmployeeDTO)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public EmployeeDTO createEmployee(EmployeeDTO inputEmployee){
