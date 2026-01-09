@@ -5,6 +5,7 @@ import dev.rupom.learning.springboot.webapi.services.EmployeeService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/employees")
@@ -38,4 +39,10 @@ public class EmployeeController {
     public Boolean deleteEmployeeById(@PathVariable Long id){
         return employeeService.deleteEmployeeById(id);
     }
+
+    @PatchMapping(path = "/edit/{id}")
+    public EmployeeDTO editEmployeeById(@PathVariable Long id, @RequestBody Map<String, Object> updateData){
+        return employeeService.editEmployeeById(id,updateData);
+    }
+
 }

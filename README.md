@@ -13,8 +13,10 @@ This project is a playground for exploring Spring & Spring Boot features, includ
 - H2 Database
 - Lombok
 - Maven
-- ModelMapper
-- MapStruct
+- ModelMapper & MapStruct
+- Stream API
+- Lambda
+- ReflectionUtils
 
 ## Getting Started
 
@@ -28,4 +30,4 @@ This project is a playground for exploring Spring & Spring Boot features, includ
 3. Run the application using the SpringBoot@MainClass as this repository contains multiple mini application.
 
 ---
-*Updated on: 09-Jan-2026 → 04:20PM*
+*Updated on: 09-Jan-2026 → 09:15PM*

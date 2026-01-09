@@ -5,8 +5,11 @@ import dev.rupom.learning.springboot.webapi.dto.EmployeeDTO;
 import dev.rupom.learning.springboot.webapi.entities.EmployeeEntity;
 import dev.rupom.learning.springboot.webapi.repositories.EmployeeRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ReflectionUtils;
 
+import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -44,12 +47,24 @@ public class EmployeeService {
         return mapper.toEmployeeDTO(employeeEntity);
     }
 
+    public boolean isExistsByEmployeeId(Long id){
+        return employeeRepository.existsById(id);
+    }
+
     public Boolean deleteEmployeeById(Long id){
-        boolean exists = employeeRepository.existsById(id);
-        if(exists){
-            employeeRepository.deleteById(id);
-            return true;
-        }
-        return false;
+        if(!isExistsByEmployeeId(id)) return false;
+        employeeRepository.deleteById(id);
+        return true;
+    }
+
+    public EmployeeDTO editEmployeeById(Long id, Map<String, Object> updateData) {
+        if(!isExistsByEmployeeId(id)) return null;
+        EmployeeEntity employeeEntity = employeeRepository.findById(id).get();
+        updateData.forEach((field,value)->{
+            Field fieldToBeUpdated = ReflectionUtils.findField(EmployeeEntity.class,field);
+            fieldToBeUpdated.setAccessible(true);
+            ReflectionUtils.setField(fieldToBeUpdated,employeeEntity,value);
+        });
+        return mapper.toEmployeeDTO(employeeRepository.save(employeeEntity));
     }
 }

@@ -1,5 +1,6 @@
 package dev.rupom.learning.springboot.webapi.entities;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
 
