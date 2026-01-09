@@ -27,4 +27,4 @@ This project is a playground for exploring Spring & Spring Boot features, includ
 3. Run the application using the SpringBoot@MainClass as this repository contains multiple mini application.
 
 ---
-*Updated on: 09-Jan-2026 → 12:49PM*
+*Updated on: 09-Jan-2026 → 02:36PM*

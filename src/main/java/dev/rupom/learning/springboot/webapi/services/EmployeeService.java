@@ -27,7 +27,7 @@ public class EmployeeService {
         List<EmployeeEntity> employeeEntities = employeeRepository.findAll();
         return employeeEntities
                 .stream()
-                .map(employeeEntity -> mapper.toEmployeeDTO(employeeEntity))
+                .map(mapper::toEmployeeDTO)
                 .collect(Collectors.toList());
     }
     public EmployeeDTO createEmployee(EmployeeDTO inputEmployee){
