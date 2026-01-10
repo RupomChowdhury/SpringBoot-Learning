@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @RestController
@@ -25,13 +26,18 @@ public class EmployeeController {
         Optional<EmployeeDTO> employeeDTO = employeeService.getEmployeeById(employeeId);
         return employeeDTO
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .orElseThrow(()->new NoSuchElementException("Employee Not Found"));
     }
 
     @GetMapping
     public ResponseEntity<List<EmployeeDTO>> getAllEmployees(){
-        return ResponseEntity.ok(employeeService.getAllEmployees());
+        List<EmployeeDTO> employeeDTOList = employeeService.getAllEmployees();
+        return employeeDTOList.stream()
+                .findAny()
+                .map(e -> ResponseEntity.ok(employeeDTOList))
+                .orElseThrow(() -> new NoSuchElementException("No Employee Found"));
     }
+
     @PostMapping(path = "/add")
     public ResponseEntity<EmployeeDTO> createEmployee(@RequestBody @Valid EmployeeDTO inputEmployee){
         EmployeeDTO savedEmployee = employeeService.createEmployee(inputEmployee);
@@ -56,5 +62,5 @@ public class EmployeeController {
         if(employeeDTO == null ) return ResponseEntity.notFound().build();
         return ResponseEntity.ok(employeeDTO);
     }
-    //new commit
+
 }

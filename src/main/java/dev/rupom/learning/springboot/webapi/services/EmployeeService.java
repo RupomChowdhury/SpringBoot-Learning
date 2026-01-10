@@ -23,8 +23,7 @@ public class EmployeeService {
     }
 
     public Optional<EmployeeDTO> getEmployeeById(Long employeeId){
-//       Optional<EmployeeEntity> employeeEntity = employeeRepository.findById(employeeId);
-        return employeeRepository.findById(employeeId).map(mapper::toEmployeeDTO);
+        return employeeRepository.findById(employeeId).map(mapper::toEmployeeDTO); //return empty optional if not found
     }
 
     public List<EmployeeDTO> getAllEmployees(){
