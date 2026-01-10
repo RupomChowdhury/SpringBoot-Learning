@@ -14,7 +14,7 @@ import java.lang.annotation.Target;
         validatedBy = {EmployeeRoleValidator.class}
 )
 public @interface EmployeeRoleValidation  {
-    String message() default "{Role must be admin or user}";
+    String message() default "Role must be admin or user.";
 
     Class<?>[] groups() default {};
 

@@ -14,26 +14,30 @@ import java.util.List;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<ApiError> handleResourcesNotFound(ResourceNotFoundException exception){
+    public ResponseEntity<ApiResponse<?>> handleResourcesNotFound(ResourceNotFoundException exception){
         ApiError apiError = ApiError.builder()
                 .status(HttpStatus.NOT_FOUND)
                 .message(exception.getMessage())
                 .build();
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(apiError);
+        return buildErrorResponseEntity(apiError);
+    }
+
+    private ResponseEntity<ApiResponse<?>> buildErrorResponseEntity(ApiError apiError) {
+        return ResponseEntity.status(apiError.getStatus()).body(new ApiResponse<>(apiError));
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiError> handleException(Exception exception) {
+    public ResponseEntity<ApiResponse<?>> handleException(Exception exception) {
         ApiError apiError = ApiError.builder()
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .message(exception.getMessage())
                 .build();
-        return new ResponseEntity<>(apiError, HttpStatus.INTERNAL_SERVER_ERROR);
+        return ResponseEntity.internalServerError().body(new ApiResponse<>(apiError));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ApiError> handleValidationExceptions(MethodArgumentNotValidException exception) {
-        List<String> allError = exception
+    public ResponseEntity<ApiResponse<?>> handleValidationExceptions(MethodArgumentNotValidException exception) {
+        List<String> error = exception
                 .getBindingResult()
                 .getAllErrors()
                 .stream()
@@ -43,8 +47,8 @@ public class GlobalExceptionHandler {
         ApiError apiError = ApiError.builder()
                 .status(HttpStatus.BAD_REQUEST)
                 .message("Input Validation Failed")
-                .errors(allError)
+                .reason(error)
                 .build();
-        return ResponseEntity.badRequest().body(apiError);
+        return ResponseEntity.badRequest().body(new ApiResponse<>(apiError));
     }
 }

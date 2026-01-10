@@ -9,10 +9,10 @@ import java.util.List;
 
 
 @Data
-@JsonPropertyOrder({"status", "message","errors"})
+@JsonPropertyOrder({"status", "message","reason"})
 @Builder
 public class ApiError {
     private HttpStatus status;
     private String message;
-    private List<String> errors;
+    private List<String> reason;
 }
