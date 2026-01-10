@@ -1,12 +1,10 @@
 package dev.rupom.learning.springboot.webapi.entities;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Getter //we can use @Data for both @Getter and @Setter
-@Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "employees")
