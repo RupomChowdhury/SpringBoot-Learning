@@ -1,5 +1,6 @@
 package dev.rupom.learning.springboot.webapi.dto;
 
+import dev.rupom.learning.springboot.webapi.annotations.EmployeeRoleValidation;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -29,7 +30,8 @@ public class EmployeeDTO {
     private LocalDate dateOfJoining;
 
     @NotBlank(message = "Role is required.")
-    @Pattern(regexp = "^(admin|user)$",message = "Invalid role.")
+//    @Pattern(regexp = "^(admin|user)$",message = "Invalid role.")
+    @EmployeeRoleValidation //custom validation
     private String role;
 
     @NotNull @Positive(message = "Salary should be positive.")
