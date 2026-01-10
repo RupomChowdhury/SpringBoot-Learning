@@ -17,6 +17,7 @@ This project is a playground for exploring Spring & Spring Boot features, includ
 - Stream API
 - Lambda
 - ReflectionUtils, ResponseEntity<>, Optional<>
+- Exception Handling
 
 ## Getting Started
 
@@ -30,4 +31,4 @@ This project is a playground for exploring Spring & Spring Boot features, includ
 3. Run the application using the SpringBoot@MainClass as this repository contains multiple mini application.
 
 ---
-*Updated on: 09-Jan-2026 → 10:30PM*
+*Updated on: 10-Jan-2026 → 08:37PM*
