@@ -2,6 +2,7 @@ package dev.rupom.learning.springboot.webapi.controller;
 
 import dev.rupom.learning.springboot.webapi.dto.EmployeeDTO;
 import dev.rupom.learning.springboot.webapi.services.EmployeeService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,7 +33,7 @@ public class EmployeeController {
         return ResponseEntity.ok(employeeService.getAllEmployees());
     }
     @PostMapping(path = "/add")
-    public ResponseEntity<EmployeeDTO> createEmployee(@RequestBody EmployeeDTO inputEmployee){
+    public ResponseEntity<EmployeeDTO> createEmployee(@RequestBody @Valid EmployeeDTO inputEmployee){
         EmployeeDTO savedEmployee = employeeService.createEmployee(inputEmployee);
         return new ResponseEntity<>(savedEmployee, HttpStatus.CREATED);
     }
