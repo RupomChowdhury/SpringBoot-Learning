@@ -25,7 +25,6 @@ public class EmployeeDTO {
     @Max(value = 60,message = "Age should be less than 60")
     private Integer age;
 
-//    @JsonProperty("joiningDate")
     @NotNull @PastOrPresent
     private LocalDate dateOfJoining;
 

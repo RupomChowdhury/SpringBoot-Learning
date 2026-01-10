@@ -3,14 +3,12 @@ package dev.rupom.learning.springboot.webapi.controller;
 import dev.rupom.learning.springboot.webapi.dto.EmployeeDTO;
 import dev.rupom.learning.springboot.webapi.services.EmployeeService;
 import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/employees")
@@ -23,25 +21,19 @@ public class EmployeeController {
 
     @GetMapping(path ="/{id}")
     public ResponseEntity<EmployeeDTO> getEmployeeById(@PathVariable("id") Long employeeId){
-        Optional<EmployeeDTO> employeeDTO = employeeService.getEmployeeById(employeeId);
-        return employeeDTO
-                .map(ResponseEntity::ok)
-                .orElseThrow(()->new NoSuchElementException("Employee Not Found"));
+        return ResponseEntity.ok(employeeService.getEmployeeById(employeeId));
     }
 
     @GetMapping
     public ResponseEntity<List<EmployeeDTO>> getAllEmployees(){
         List<EmployeeDTO> employeeDTOList = employeeService.getAllEmployees();
-        return employeeDTOList.stream()
-                .findAny()
-                .map(e -> ResponseEntity.ok(employeeDTOList))
-                .orElseThrow(() -> new NoSuchElementException("No Employee Found"));
+        return ResponseEntity.ok(employeeDTOList);
     }
 
     @PostMapping(path = "/add")
     public ResponseEntity<EmployeeDTO> createEmployee(@RequestBody @Valid EmployeeDTO inputEmployee){
         EmployeeDTO savedEmployee = employeeService.createEmployee(inputEmployee);
-        return new ResponseEntity<>(savedEmployee, HttpStatus.CREATED);
+        return ResponseEntity.created(URI.create("/employees/" + savedEmployee.getId())).body(savedEmployee);
     }
 
     @PutMapping(path="/update/{id}")

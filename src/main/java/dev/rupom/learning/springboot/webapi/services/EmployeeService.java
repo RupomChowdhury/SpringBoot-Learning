@@ -3,6 +3,7 @@ package dev.rupom.learning.springboot.webapi.services;
 import dev.rupom.learning.springboot.webapi.configs.MapperConfig;
 import dev.rupom.learning.springboot.webapi.dto.EmployeeDTO;
 import dev.rupom.learning.springboot.webapi.entities.EmployeeEntity;
+import dev.rupom.learning.springboot.webapi.exceptions.ResourceNotFoundException;
 import dev.rupom.learning.springboot.webapi.repositories.EmployeeRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
@@ -10,7 +11,6 @@ import org.springframework.util.ReflectionUtils;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @Service
 public class EmployeeService {
@@ -22,16 +22,18 @@ public class EmployeeService {
         this.mapper = mapper;
     }
 
-    public Optional<EmployeeDTO> getEmployeeById(Long employeeId){
-        return employeeRepository.findById(employeeId).map(mapper::toEmployeeDTO); //return empty optional if not found
+    public EmployeeDTO getEmployeeById(Long employeeId){
+        EmployeeEntity employeeEntity = employeeRepository.findById(employeeId).orElseThrow(()-> new ResourceNotFoundException("Employee Not Found"));
+        return mapper.toEmployeeDTO(employeeEntity);
     }
 
     public List<EmployeeDTO> getAllEmployees(){
-        List<EmployeeEntity> employeeEntities = employeeRepository.findAll();
-        return employeeEntities
+        List<EmployeeDTO> employeeDTOs = employeeRepository.findAll()
                 .stream()
                 .map(mapper::toEmployeeDTO)
                 .toList();
+        if(!employeeDTOs.isEmpty()) return employeeDTOs;
+        throw new ResourceNotFoundException("No Employees Found");
     }
 
     public EmployeeDTO createEmployee(EmployeeDTO inputEmployee){
@@ -39,26 +41,26 @@ public class EmployeeService {
         return mapper.toEmployeeDTO(employeeEntity);
     }
 
-    public EmployeeDTO updateEmployeeById(Long id, EmployeeDTO updateEmployee){ //has some problem in this logic. not saving if id isn't present.
+    public void isExistsByEmployeeId(Long id){
+        if(!employeeRepository.existsById(id)) throw new ResourceNotFoundException("Employee Not Found");
+    }
+
+    public EmployeeDTO updateEmployeeById(Long id, EmployeeDTO updateEmployee){
+        isExistsByEmployeeId(id);
         EmployeeEntity employeeEntity = mapper.toEmployeeEntity(updateEmployee);
         employeeEntity.setId(id);
         employeeEntity = employeeRepository.save(employeeEntity);
         return mapper.toEmployeeDTO(employeeEntity);
     }
 
-    public boolean isExistsByEmployeeId(Long id){
-        return employeeRepository.existsById(id);
-    }
-
     public Boolean deleteEmployeeById(Long id){
-        if(!isExistsByEmployeeId(id)) return false;
+        isExistsByEmployeeId(id);
         employeeRepository.deleteById(id);
         return true;
     }
 
     public EmployeeDTO editEmployeeById(Long id, Map<String, Object> updateData) {
-        if(!isExistsByEmployeeId(id)) return null;
-        EmployeeEntity employeeEntity = employeeRepository.findById(id).get();
+        EmployeeEntity employeeEntity = employeeRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Employee Not Found"));
         updateData.forEach((field,value)->{
             Field fieldToBeUpdated = ReflectionUtils.findField(EmployeeEntity.class,field);
             fieldToBeUpdated.setAccessible(true);
